@@ -1,0 +1,16 @@
+---
+
+demo_vcn_name: "{{ demo_var_prefix }}_vcn"
+# no special chars, 1-15 chars only, start with alpha
+demo_vcn_dns_label: "demo{{ random_suffix }}vcn"
+
+demo_ig_display_name: "{{ demo_var_prefix }}_ig"
+demo_nat_display_name: "{{ demo_var_prefix }}_nat"
+demo_core_route_table_name: "{{ demo_var_prefix }}_route_table"
+# route all access to our Internet Gateway
+demo_core_ig_route_table_rules:
+    - cidr_block: "{{ quad_zero_route }}"
+      network_entity_id: "{{ demo_ig_ocid }}"
+demo_core_nat_route_table_rules:
+    - cidr_block: "{{ quad_zero_route }}"
+      network_entity_id: "{{ demo_nat_ocid }}"

@@ -1,0 +1,53 @@
+---
+# Here we assign variables that are applicable to all groups
+# Define environment
+#
+#
+demo_ad1_name: "qasv:EU-FRANKFURT-1-AD-1"
+demo_ad2_name: "qasv:EU-FRANKFURT-1-AD-2"
+demo_compartment_ocid: "ocid1.compartment.oc1.<example>"
+demo_ol_image_ocid: "ocid1.image.<example>"
+
+# Location of SSH key, leave empty to generate key
+demo_ssh_private_key: "~/.ssh/auth_key"
+demo_ssh_public_key: "~/.ssh/auth_key.pub"
+# A random suffix to append to names so that we can run parallel demo environments.
+random_suffix: "{{ 250 | random(seed=ansible_nodename, step=10) }}"
+
+# Tag for the infrastructure
+infra_name: "apexdb-demo-setup-{{ random_suffix }}"
+
+# A prefix we add to all the display_names of demo artifacts that we
+# create in this demo
+demo_var_prefix: "apexdb-{{ random_suffix }}"
+
+# URLs to download required software
+demo_apex_par: "APEX URL"
+demo_ords_par: "ORDS URL"
+# Database variables
+demo_db_shape: "VM.Standard2.2"
+demo_db_cluster_name: "dbcluster"
+demo_db_password: "BEstr0ng_#1"
+demo_db_name: "oradb"
+demo_db_pdb_name: "pdbprod"
+
+demo_ordsserver_shape: "VM.Standard2.2"
+
+# networking common vars
+quad_zero_route: "0.0.0.0/0"
+TCP_protocol: "6"
+HTTP_port: "80"
+HTTPS_port: "443"
+ORDS_port: 8443
+DB_port: 1521
+SSH_port: 22
+
+# CIDR ranges for the various subnets in this demo
+demo_vcn_cidr_block: "10.0.0.0/26"
+demo_ords_subnet_ad1_cidr: "10.0.0.0/28"
+demo_ords_subnet_ad2_cidr: "10.0.0.16/28"
+demo_db_subnet_cidr: "10.0.0.32/28"
+demo_lb_subnet_ad1_cidr: "10.0.0.56/30"
+demo_lb_subnet_ad2_cidr: "10.0.0.60/30"
+bastion_subnet_cidr_block: "10.0.0.48/29"
+

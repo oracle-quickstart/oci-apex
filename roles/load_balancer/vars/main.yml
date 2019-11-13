@@ -1,0 +1,26 @@
+---
+
+availability_domain_1: "{{ demo_ad1_name }}"
+availability_domain_2: "{{ demo_ad2_name }}"
+
+lb_dns_label_ad1: 'lbdnsad1'
+lb_dns_label_ad2: 'lbdnsad2'
+
+lb_subnet_ad1: 'lb_subnet_ad1'
+lb_subnet_ad2: 'lb_subnet_ad2'
+demo_lb_security_list_name: "lb_subnet_sec_list"
+
+lb_name: "load_balancer"
+sample_shape: "100Mbps"
+sample_backend_set_name: 'sample_backend_set'
+sample_backend_set_policy: 'ROUND_ROBIN'
+
+# Initialize values for listeners
+https_listener_name: 'https_listener1'
+https_port: 443
+
+# Initialize values for certificates
+sample_ca_certificate: "{{cert_path}}/ca_cert.pem"
+sample_private_key: "{{cert_path}}/private_key.pem"
+sample_public_certificate: "{{cert_path}}/cert.pem"
+sample_certificate_name: "sample_certs"

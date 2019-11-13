@@ -1,0 +1,21 @@
+---
+
+availability_domain: "{{ demo_ad1_name }}"
+cluster_name: "{{ demo_db_cluster_name }}"
+db_edition: "STANDARD_EDITION"
+password: "{{ demo_db_password }}"
+db_name: "{{ demo_db_name }}"
+db_pdb_name: "{{ demo_db_pdb_name }}"
+db_version: "19.0.0.0"
+
+shape: "{{ demo_db_shape }}"
+
+db_subnet_id: "{{ db_subnet_id }}"
+db_subnet_name: "oradb_subnet"
+
+cidr_block_db: "{{ demo_db_subnet_cidr }}"
+
+db_sec_list_id: "{{ db_sec_list_id }}"
+db_subnet_sec_list_name: "db_sec_list"
+
+dns_label_db: 'dbad1'

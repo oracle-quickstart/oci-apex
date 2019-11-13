@@ -1,0 +1,42 @@
+---
+
+# Use a jinja2 template of the ingress and egress security rules to generate
+# a templated version of the final rules.
+- name: create ingress rules yaml body
+  template: src=templates/ingress_security_list_ad1.yaml.j2 dest=/tmp/ingress_security_list_ad1.yaml
+- name: create egress yaml body
+  template: src=templates/egress_security_list_ad1.yaml.j2 dest=/tmp/egress_security_list_ad1.yaml
+
+# Load the variables defined in the generated files
+- name: load the variables defined in the ingress rules yaml body
+  include_vars: 
+    file: /tmp/ingress_security_list_ad1.yaml
+    name: loaded_ingress
+
+- name: print loaded_ingress
+  debug:
+    msg: "loaded ingress is {{loaded_ingress}}"
+
+- name: load the variables defined in the egress rules yaml body
+  include_vars: 
+    file: /tmp/egress_security_list_ad1.yaml
+    name: loaded_egress
+
+- name: print loaded_egress
+  debug:
+    msg: "loaded egress is {{loaded_egress}}"
+
+# Use the loaded variables as the ingress and egress security rules in our
+# sec list
+- name: Create a security list for dbsubnet in availability domain 1
+  oci_security_list:
+    name: "{{ db_subnet_sec_list_name }}"
+    compartment_id: "{{ demo_compartment_ocid }}"
+    vcn_id: "{{ demo_vcn_ocid }}"
+    state: 'present'
+    ingress_security_rules: "{{ loaded_ingress.ad1_ingress_security_rules }}"
+    egress_security_rules: "{{ loaded_egress.ad1_egress_security_rules }}"
+  register: result
+
+- set_fact:
+    db_sec_list_id: "{{result.security_list.id}}"

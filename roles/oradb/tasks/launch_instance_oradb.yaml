@@ -1,0 +1,59 @@
+---
+
+#Task for launching an instance for Oracle db instance in ad1
+
+# check if db_home exists
+- name: check if db_home exist
+  oci_db_system_facts:
+      compartment_id: "{{ demo_compartment_ocid }}"
+      display_name: "{{ cluster_name }}"
+  register: dbhome
+
+- debug:
+     msg: "{{ dbhome }}"
+
+- set_fact:
+    demo_database_hostname: "{{ dbhome.db_systems[0].hostname }}.{{ dbhome.db_systems[0].domain }}"
+    demo_database_service: "{{ db_pdb_name }}.{{ dbhome.db_systems[0].domain }}"
+  when: dbhome.db_systems|length==1
+  
+- name: Launch OraDB
+  oci_db_system:
+      compartment_id: "{{ demo_compartment_ocid }}"
+      availability_domain: "{{ demo_ad1_name }}"
+      cluster_name: "{{ cluster_name }}"
+      database_edition: "{{db_edition}}"
+      db_home:
+        database:
+            admin_password: "{{ password }}"
+            character_set: 'AL32UTF8'
+            db_backup_config:
+             auto_backup_enabled: True
+            db_name: "{{ db_name }}"
+            db_workload: 'OLTP'
+            ncharacter_set: 'AL16UTF16'
+            pdb_name: "{{ db_pdb_name }}"
+        db_version: "{{ db_version }}"
+        display_name: "{{ demo_var_prefix }}db"
+      disk_redundancy: "NORMAL"
+      display_name: "{{ cluster_name }}"
+      hostname: "{{ cluster_name }}"
+      initial_data_storage_size_in_gb: 512
+      license_model: "LICENSE_INCLUDED"
+      node_count: 1
+      shape: "{{ shape }}"
+      ssh_public_keys: ["{{ demo_ssh_public_key}}"]
+      subnet_id: "{{ db_subnet_id }}"
+      wait: True
+      #depending on the shape it takes a long time to provision the database service
+      wait_timeout: 8000
+      state: 'present'
+  register: result
+  ignore_errors: yes
+  when: dbhome.db_systems|length==0
+
+- set_fact:
+    demo_database_hostname: "{{ result.db_system.hostname }}.{{ result.db_system.domain }}"
+    demo_database_service: "{{ db_pdb_name }}.{{ result.db_system.domain }}"
+  
+  when: dbhome.db_systems|length==0

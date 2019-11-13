@@ -1,0 +1,19 @@
+
+#Task for creating private subnet for ad1
+
+- name: Create private subnet for Oracle database
+  oci_subnet:
+    display_name: '{{ db_subnet_name }}'
+    availability_domain: "{{ availability_domain }}"
+    cidr_block: "{{ cidr_block_db }}"
+    compartment_id: "{{ demo_compartment_ocid }}"
+    prohibit_public_ip_on_vnic: true
+    vcn_id: "{{ demo_vcn_ocid }}"
+    dns_label: "{{ dns_label_db }}"
+    security_list_ids: ["{{ db_sec_list_id }}"]
+    route_table_id: "{{ demo_core_rt_nat_ocid }}"
+  register: result
+
+- set_fact:
+   db_subnet_id: "{{ result.subnet.id }}"
+   db_subnet_dns_label: "{{ result.subnet.dns_label }}"

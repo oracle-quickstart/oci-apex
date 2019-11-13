@@ -1,0 +1,5 @@
+---
+
+- import_tasks: create_db_security_lists.yaml
+- import_tasks: create_db_subnet.yaml
+- import_tasks: launch_instance_oradb.yaml

@@ -1,0 +1,7 @@
+---
+
+- debug: msg="Inside ordsserver role"
+
+- import_tasks: create_ords_security_list.yaml
+- import_tasks: create_ords_subnet.yaml
+- import_tasks: check_ords_servers.yaml

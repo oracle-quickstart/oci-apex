@@ -1,0 +1,28 @@
+---
+- name: Create bastion server
+  oci_instance:
+    availability_domain: "{{ bastion_availability_domain }}"
+    compartment_id: "{{ demo_compartment_ocid }}"
+    name: "{{ demo_bastion_instance_name }}"
+    image_id: "{{ bastion_image_ocid }}"
+    shape: "{{ bastion_shape }}"
+    vnic:
+        assign_public_ip: True
+        hostname_label: "{{ demo_bastion_host_name }}"
+        subnet_id: "{{ bastion_subnet_ocid }}"
+    metadata:
+      ssh_authorized_keys: "{{ lookup('file', demo_ssh_public_key)}}"
+    freeform_tags:
+      infra: "{{ infra_name }}"
+      type: bastion
+    state: 'running'
+  register: bastion
+
+- name: Get details of a specific Compute instance
+  oci_instance_facts:
+    id: "{{ bastion.instance.id }}"
+  register: newbastion
+
+- set_fact:
+    ssh_extra_args: "-o StrictHostKeyChecking=no -i {{ demo_ssh_private_key }} -o ProxyCommand='ssh -o StrictHostKeyChecking=no -i {{ demo_ssh_private_key }} -W %h:%p -q opc@{{ newbastion.instances[0].primary_public_ip }}'"
+    when: newbastion.instance|length==1

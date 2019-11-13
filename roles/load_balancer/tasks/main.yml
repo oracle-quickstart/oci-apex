@@ -1,0 +1,7 @@
+---
+
+- debug: msg="Inside lb role"
+- import_tasks: create_security_list.yaml
+- import_tasks: create_lb_subnet.yaml
+- import_tasks: create_certificate.yaml
+- import_tasks: create_loadbalancers.yaml

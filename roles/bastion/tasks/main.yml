@@ -1,0 +1,6 @@
+---
+
+- debug: msg="Inside bastion role"
+- import_tasks: create_security_list.yaml
+- import_tasks: create_subnet.yaml
+- import_tasks: get_bastion_details.yaml

@@ -1,0 +1,45 @@
+---
+- name: Creates directory
+  file: path=/home/opc/ state=directory
+- name: copy setup scripts to hosts
+  copy:
+    src: ../files/jetty/
+    dest: /home/opc/
+    owner: opc
+    group: opc
+
+- name: set execute to script files
+  shell: 'chmod u+x *.sh'
+  
+- name: fetch ords 
+  unarchive:
+    src: "{{ demo_ords_par }}"
+    dest: /home/opc/
+    remote_src: yes
+    creates: /home/opc/ords.war
+
+- name: fetch apex
+  unarchive:
+    src: "{{ demo_apex_par }}"
+    dest: /home/opc/
+    remote_src: yes
+    creates: /home/opc/apex/
+  
+- name: set runtime
+  blockinfile:
+    dest: "~/.bashrc"
+    block: |
+      export ORACLE_HOME=/usr/lib/oracle/18.3/client64
+      export LD_LIBRARY_PATH="$ORACLE_HOME/lib"
+      export PATH="$ORACLE_HOME/bin:$PATH"
+    marker: '# {mark} ANSIBLE MANAGED BLOCK - Oracle instant client'
+    insertbefore: BOF
+    create: yes
+
+- name: run jetty_ords script
+  command: ./config_jetty_ords.sh {{ demo_db_password }} {{ demo_db_hostname }} {{ demo_database_service }} {{ ORDS_port}} 
+  register: ords_result
+         
+- name: run install apex
+  command: ./config_jetty_apex.sh {{ demo_db_password }} {{ demo_db_hostname }} {{ demo_database_service }} {{ ORDS_port}} 1
+  register: apex_result

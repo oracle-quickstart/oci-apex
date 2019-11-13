@@ -1,0 +1,21 @@
+---
+# egress rule to allow SSH connection to the database subnet and the ords subnet
+bastion_egress_security_rules:
+  - destination: "{{ demo_ords_subnet_ad1_cidr }}"
+    protocol: "{{ TCP_protocol }}"
+    tcp_options:
+      destination_port_range:
+        min: {{ SSH_port }}
+        max: {{ SSH_port }}
+  - destination: "{{ demo_ords_subnet_ad2_cidr }}"
+    protocol: "{{ TCP_protocol }}"
+    tcp_options:
+      destination_port_range:
+        min: {{ SSH_port }}
+        max: {{ SSH_port }}
+  - destination: "{{ demo_db_subnet_cidr }}"
+    protocol: "{{ TCP_protocol }}"
+    tcp_options:
+      destination_port_range:
+        min: {{ SSH_port }}
+        max: {{ SSH_port }}

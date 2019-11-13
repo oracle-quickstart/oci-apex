@@ -1,0 +1,53 @@
+---
+# Copyright (c) 2018, Oracle and/or its affiliates.
+# This software is made available to you under the terms of the GPL 3.0 license or the Apache 2.0 license.
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+# Apache License v2.0
+# See LICENSE.TXT for details.
+
+- debug: 
+    msg: "Inside ordsserver role"
+
+- name: Template the ordsserver bootstrap to fill in ords and apex urls
+  template: 
+    src: "./templates/ordsserver_bootstrap.j2"
+    dest: "/tmp/ordsserver_bootstrap"
+    backup: no
+
+- name: Slurp cloud-init content from the template-applied result for OS1
+  slurp: 
+    src: "/tmp/ordsserver_bootstrap"
+  register: demo_ordsserver_cloud_init
+
+- name: Launch OS1 in ords Subnet
+  oci_instance:
+        name: "{{ ords_name }} "
+        image_id: "{{ demo_ol_image_ocid }}"
+        shape: "{{ demo_ordsserver_shape }}"
+        compartment_id: "{{ demo_compartment_ocid }}"
+        availability_domain: "{{ ords_domain }}"
+        metadata:
+            ssh_authorized_keys: "{{ lookup('file', demo_ssh_public_key)}}"
+            user_data: "{{ demo_ordsserver_cloud_init['content'] }}"
+        vnic:
+            hostname_label: "{{ ords_hostname }}"
+            assign_pubic_ip: false
+            subnet_id: "{{ subnet_id }}"
+        freeform_tags:
+            infra: "{{ infra_name }}"
+            type: ordsserver
+        state: 'present'
+        wait: yes
+        wait_until: "RUNNING"
+  register: demoos1
+
+
+  
+- name: Get details of the instance
+  oci_instance_facts:
+    id: "{{ demoos1.instance.id }}"
+  register: result
+
+- name: set internalIP
+  set_fact:
+     ords_ip: "{{ result.instances[0].primary_private_ip }}"

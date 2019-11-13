@@ -1,0 +1,14 @@
+---
+
+demo_ordsserver_ad1: "{{ demo_ad1_name }}"
+demo_ordsserver_ad2: "{{ demo_ad2_name }}"
+demo_ordsserver_name: "ords"
+demo_ordsserver_name_1: "{{ demo_ordsserver_name }}1"
+demo_ordsserver_name_2: "{{ demo_ordsserver_name }}2"
+# no underscores in host names
+demo_ordsserver_host_name: "ordsserver"
+demo_ordsserver_host_name_1: "{{demo_ordsserver_host_name}}1"
+demo_ordsserver_host_name_2: "{{demo_ordsserver_host_name}}2"
+demo_ords_subnet_ad1_name: "ordsad1"
+demo_ords_subnet_ad2_name: "ordsad2"
+demo_ords_subnet_security_list_name: "ordsSL"

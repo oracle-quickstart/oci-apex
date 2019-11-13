@@ -1,0 +1,31 @@
+---
+
+- name: Create a subnet in AD1
+  oci_subnet:
+    availability_domain: "{{ availability_domain_1 }}"
+    name: '{{ lb_subnet_ad1 }}'
+    dns_label: '{{ lb_dns_label_ad1 }}'
+    route_table_id: '{{ demo_core_rt_ig_ocid }}'
+    security_list_ids: ['{{ lb_security_list_ocid }}']
+    cidr_block: "{{ demo_lb_subnet_ad1_cidr }}"
+    compartment_id: "{{ demo_compartment_ocid }}"
+    vcn_id: '{{ demo_vcn_ocid }}'
+  register: result
+
+- set_fact:
+    sample_subnet_id_ad1: "{{ result.subnet.id }}"
+
+- name: Create a subnet in AD2
+  oci_subnet:
+    availability_domain: "{{ availability_domain_2 }}"
+    name: '{{ lb_subnet_ad2 }}'
+    dns_label: '{{ lb_dns_label_ad2 }}'
+    route_table_id: '{{ demo_core_rt_ig_ocid }}'
+    security_list_ids: ['{{ lb_security_list_ocid }}']
+    cidr_block: "{{ demo_lb_subnet_ad2_cidr }}"
+    compartment_id: "{{ demo_compartment_ocid }}"
+    vcn_id: '{{ demo_vcn_ocid }}'
+  register: result
+
+- set_fact:
+    sample_subnet_id_ad2: "{{ result.subnet.id }}"

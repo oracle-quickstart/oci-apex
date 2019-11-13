@@ -1,0 +1,12 @@
+#cloud-config
+package_update: true
+
+runcmd:
+    - yum -y install wget java git expect nkf screen
+    - yum-config-manager --enable ol7_oci_included
+    - yum install -y oracle-instantclient18.3-basic
+    - yum install -y oracle-instantclient18.3-sqlplus
+    - echo "export JAVA_HOME=$(readlink -e $(which java)|sed 's:/bin/java::')" >  /etc/profile.d/java.sh
+    - echo "PATH=\$PATH:\$JAVA_HOME/bin"                                       >> /etc/profile.d/java.sh
+    - firewall-offline-cmd --zone=public --add-port="{{ ORDS_port }}"/tcp
+    - systemctl restart firewalld

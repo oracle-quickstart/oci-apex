@@ -1,0 +1,62 @@
+---
+
+- debug: msg="Inside ordsserver role"
+
+- name: retrieve ORDS server in AD1
+  oci_instance_facts:
+    availability_domain: "{{ demo_ordsserver_ad1 }}"
+    compartment_id: "{{ demo_compartment_ocid }}"
+    display_name: "{{ demo_ordsserver_name_1 }}"
+    lifecycle_state: 'RUNNING'
+  register: ords_details
+
+- name: Include task list to create ords server
+  include_tasks: "create_ords_servers.yaml"
+  args:
+    apply:
+      vars:
+        ords_domain: "{{ demo_ordsserver_ad1 }}"
+        ords_name: "{{ demo_ordsserver_name_1 }}"
+        ords_hostname: "{{ demo_ordsserver_host_name_1 }}"
+        subnet_id: "{{ demo_ords_subnet_ad1_ocid }}"
+  when: ords_details.instances|length==0
+
+- name: Add host to group 'ords_apex' with ssh
+  add_host:
+    name: "{{ ords_ip }}"
+    groups: ords_apex
+    ansible_ssh_common_args: "-i {{ demo_ssh_private_key }} -o StrictHostKeyChecking=no {{ ssh_extra_args }}"   
+
+- name: retrieve ORDS server in AD2
+  oci_instance_facts:
+    availability_domain: "{{ demo_ordsserver_ad2 }}"
+    compartment_id: "{{ demo_compartment_ocid }}"
+    display_name: "{{ demo_ordsserver_name_2 }}"
+    lifecycle_state: 'RUNNING'
+  register: ords_details
+
+- name: Include task list to create ords server
+  include_tasks: "create_ords_servers.yaml"
+  args:
+    apply:
+      vars:
+        ords_domain: "{{ demo_ordsserver_ad2 }}"
+        ords_name: "{{ demo_ordsserver_name_2 }}"
+        ords_hostname: "{{ demo_ordsserver_host_name_2 }}"
+        subnet_id: "{{ demo_ords_subnet_ad2_ocid }}"
+  when: ords_details.instances|length==0
+
+- name: Add host to group 'ords_apex' with ssh
+  add_host:
+    name: "{{ ords_ip }}"
+    groups: ords_apex
+    ansible_ssh_common_args: "-i {{ demo_ssh_private_key }} -o StrictHostKeyChecking=no {{ ssh_extra_args }}"   
+
+
+- name: configure ords apex
+  include_tasks: config_ords.yaml
+  args:
+    apply:
+      delegate_to: "{{ item }}"
+      remote_user: "opc"
+  with_items: "{{ groups['ords_apex'] }}"

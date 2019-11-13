@@ -1,0 +1,16 @@
+---
+# Loadbalancers are only allowed to have connection to the ords subnets
+
+lb_egress_security_rules:
+  - destination: "{{ demo_ords_subnet_ad1_cidr }}"
+    protocol: "{{ TCP_protocol }}"
+    tcp_options:
+      destination_port_range:
+        min: {{ ORDS_port }}
+        max: {{ ORDS_port }}
+  - destination: "{{ demo_ords_subnet_ad2_cidr }}"
+    protocol: "{{ TCP_protocol }}"
+    tcp_options:
+      destination_port_range:
+        min: {{ ORDS_port }}
+        max: {{ ORDS_port }}

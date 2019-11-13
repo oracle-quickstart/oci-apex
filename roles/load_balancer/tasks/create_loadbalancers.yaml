@@ -1,0 +1,67 @@
+---
+
+- name: Create Public Load Balancer
+  oci_load_balancer:
+      compartment_id: "{{ demo_compartment_ocid }}"
+      name: "{{ lb_name }}"
+      shape_name: "{{ sample_shape }}"
+      subnet_ids:
+        - "{{ sample_subnet_id_ad1 }}"
+        - "{{ sample_subnet_id_ad2 }}"
+      state: 'present'
+  register: result
+
+- set_fact:
+      public_load_balancer_id: "{{ result.load_balancer.id }}"
+      public_load_balancer_ip_addresses: "{{ result.load_balancer.ip_addresses }}"
+
+- name: Create Certificate for Listener
+  oci_load_balancer_certificate:
+    load_balancer_id: "{{ public_load_balancer_id }}"
+    name: '{{ sample_certificate_name }}'
+    ca_certificate: '{{ sample_ca_certificate }}'
+    private_key: '{{ sample_private_key }}'
+    public_certificate: '{{ sample_public_certificate }}'
+    state: 'present'
+
+- name: Create Backend Set
+  oci_load_balancer_backend_set:
+    load_balancer_id: "{{ public_load_balancer_id }}"
+    name: '{{ sample_backend_set_name }}'
+    policy: '{{ sample_backend_set_policy }}'
+    health_checker:
+        interval_in_millis: 30000
+        port: '{{ ORDS_port }}'
+        protocol: "TCP"
+        retries: 3
+        timeout_in_millis: 10000
+        url_path: "/ords/{{ demo_db_pdb_name }}"
+    ssl_configuration:
+      certificate_name: '{{ sample_certificate_name }}'
+      verify_peer_certificate: False
+    state: 'present'
+
+- name: Create Listener for HTTPS traffic
+  oci_load_balancer_listener:
+    load_balancer_id: "{{ public_load_balancer_id }}"
+    name: '{{ https_listener_name }}'
+    default_backend_set_name: '{{ sample_backend_set_name }}'
+    port: '{{ https_port }}'
+    protocol: "HTTP"
+    ssl_configuration:
+        certificate_name: '{{ sample_certificate_name }}'
+        verify_peer_certificate: False
+    state: 'present'
+
+- name: Create Backend
+  oci_load_balancer_backend:
+    load_balancer_id: "{{ public_load_balancer_id }}"
+    backend_set_name: "{{ sample_backend_set_name }}"
+    ip_address: "{{ item }}"
+    port: '{{ ORDS_port }}'
+    backup: False
+    drain: False
+    offline: False
+    weight: 1
+    state: 'present'
+  with_items: "{{ groups['ords_apex'] }}" 

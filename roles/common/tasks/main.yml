@@ -1,0 +1,66 @@
+---
+
+## Common tasks for the demo
+- debug: msg="Common infrastructure setup for this demo"
+
+- name: check if ssh key is defined if not create one
+  include_tasks: "create_ssh_key.yaml"
+  when: demo_ssh_private_key == "" 
+
+- name: Create a VCN for the demo
+  oci_vcn:
+    compartment_id: "{{ demo_compartment_ocid }}"
+    display_name: "{{ demo_vcn_name }}"
+    cidr_block: "{{ demo_vcn_cidr_block }}"
+    dns_label: "{{ demo_vcn_dns_label }}"
+  register: demovcn
+  
+- set_fact:
+    demo_vcn_ocid: "{{ demovcn.vcn.id }}"
+    demo_vcn_dns_label: "{{ demovcn.vcn.dns_label }}"
+
+- name: Create Internet Gateway
+  oci_internet_gateway:
+    compartment_id: "{{ demo_compartment_ocid }}"
+    vcn_id: "{{ demo_vcn_ocid }}"
+    name: "{{ demo_ig_display_name }}"
+    enabled: 'yes'
+    state: 'present'
+  register: demoig
+- set_fact:
+    demo_ig_ocid: "{{ demoig.internet_gateway.id }}"
+    
+- name: Create a NAT gateway
+  oci_nat_gateway:
+    compartment_id: "{{ demo_compartment_ocid }}"
+    vcn_id: "{{ demo_vcn_ocid }}"
+    display_name: "{{ demo_nat_display_name }}"
+    state: 'present'
+  register: demonat
+  
+- set_fact:
+    demo_nat_ocid: "{{ demonat.nat_gateway.id }}"
+  
+- name: Create route table to connect internet gateway to the demo VCN
+  oci_route_table:
+    compartment_id: "{{ demo_compartment_ocid }}"
+    vcn_id: "{{ demo_vcn_ocid }}"
+    name: "{{ demo_core_route_table_name }}ig"
+    route_rules: "{{ demo_core_ig_route_table_rules }}"
+    state: 'present'
+  register: democoreroutetableig
+
+- set_fact:
+    demo_core_rt_ig_ocid: "{{ democoreroutetableig.route_table.id }}"
+
+- name: Create NAT route table to connect to the demo VCN
+  oci_route_table:
+    compartment_id: "{{ demo_compartment_ocid }}"
+    vcn_id: "{{ demo_vcn_ocid }}"
+    name: "{{ demo_core_route_table_name }}nat"
+    route_rules: "{{ demo_core_nat_route_table_rules }}"
+    state: 'present'
+  register: democoreroutetablenat
+
+- set_fact:
+    demo_core_rt_nat_ocid: "{{ democoreroutetablenat.route_table.id }}"

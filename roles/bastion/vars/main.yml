@@ -1,0 +1,15 @@
+---
+
+bastion_image_ocid: "{{ demo_ol_image_ocid }}"
+bastion_shape: "VM.Standard2.1"
+bastion_availability_domain: "{{ demo_ad1_name }}"
+
+demo_bastion_subnet_name: "bastion_subnet"
+# no special chars, 1-15 chars only, start with alpha
+demo_bastion_subnet_dns_label: "bastion"
+
+demo_bastion_instance_name: "bastion_instance"
+# no underscores in host names
+demo_bastion_host_name: "bastion-host"
+
+demo_bastion_subnet_security_list_name: "bastion_subnet_sec_list"

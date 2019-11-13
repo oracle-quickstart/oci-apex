@@ -1,0 +1,18 @@
+#!/usr/bin/env ansible-playbook
+---
+# Original adapted from OCI ansible sample (secure-mongodb-deployment)
+# This will deploy a public load balancer ORDS using jetty and apex into the db
+
+# master playbook for the demo to setup the whole demo infrastrcture
+- name: Deploy demo infrastructure
+  hosts: localhost
+  connection: local
+  roles:
+      - { role: roles/common }
+      - { role: roles/bastion }
+      - { role: roles/oradb }
+      - { role: roles/ordsserver }
+      - { role: roles/load_balancer }
+  tasks:
+    - debug:
+        msg: "The ordsserver is available at http://{{ public_load_balancer_ip_addresses[0].ip_address }}:80 and https://{{ public_load_balancer_ip_addresses[0].ip_address }}:443"
