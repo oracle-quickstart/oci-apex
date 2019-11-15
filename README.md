@@ -1,4 +1,4 @@
-#oci-apex
+# oci-apex
 This is a ansible playbook sample that will deploy [apex](https://apex.oracle.com) on [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/en_US/cloud-infrastructure).
 
 ## About
