@@ -1,5 +1,5 @@
 # oci-apex
-This is an ansible playbook sample that will deploy [APEX](https://apex.oracle.com) on [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/en_US/cloud-infrastructure).
+This is an ansible playbook sample that will deploy [APEX](https://apex.oracle.com) on [Oracle Cloud Infrastructure (OCI)](https://cloud.oracle.com/en_US/cloud-infrastructure).  It is developed jointly by Oracle and Macty.
 
 ## About
 This playbook will configure a database and two ORDS servers load balanced with a self signed Certificate.
