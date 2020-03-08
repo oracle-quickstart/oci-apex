@@ -37,9 +37,9 @@
     create: yes
 
 - name: run jetty_ords script
-  command: ./config_jetty_ords.sh {{ demo_db_password }} {{ demo_db_hostname }} {{ demo_database_service }} {{ ORDS_port}} 
+  command: ./config_jetty_ords.sh {{ demo_db_password }} {{ demo_database_hostname }} {{ demo_database_service }} {{ ORDS_port}} 
   register: ords_result
          
 - name: run install apex
-  command: ./config_jetty_apex.sh {{ demo_db_password }} {{ demo_db_hostname }} {{ demo_database_service }} {{ ORDS_port}} 1
+  command: ./config_jetty_apex.sh {{ demo_db_password }} {{ demo_database_hostname }} {{ demo_database_service }} {{ ORDS_port}} 1
   register: apex_result
