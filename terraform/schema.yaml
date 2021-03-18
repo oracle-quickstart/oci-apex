@@ -1,0 +1,34 @@
+title: "Deploy a containerized Jenkins instance on OCI"
+description: "Deploy containerized Jenkins server on OCI using a single compute instance. "
+schemaVersion: 1.1.0
+version: "20190304"
+locale: "en"
+
+variableGroups:
+- title: General Configuration
+  visible: false
+  variables:
+  - tenancy_ocid
+  - region
+
+- title: Apex Configuration
+  visible: true  
+  variables:
+    - autonomous_database_admin_password
+outputs:
+  apex_url:
+    type: link
+    title: Apex Login
+    description: Open Apex
+primaryOutputButton: apex_url
+
+variables:
+  autonomous_database_admin_password:
+    type: password
+    required: true
+    title: "Apex password"
+    description: "Password for the Admin user in Apex."
+    pattern: "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\\\"\\\\|,.<>\\/?]).{8,32}$"
+    visible: true
+      
+
