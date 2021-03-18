@@ -1,5 +1,5 @@
-title: "Deploy a containerized Jenkins instance on OCI"
-description: "Deploy containerized Jenkins server on OCI using a single compute instance. "
+title: "Deploy a fully managed APEX instance"
+description: "Deploy the APEX low-code application development platform as a standalone OCI managed service"
 schemaVersion: 1.1.0
 version: "20190304"
 locale: "en"
@@ -10,6 +10,7 @@ variableGroups:
   variables:
   - tenancy_ocid
   - region
+  - compartment_ocid
 
 - title: Apex Configuration
   visible: true  
@@ -27,8 +28,13 @@ variables:
     type: password
     required: true
     title: "Apex password"
-    description: "Password for the Admin user in Apex."
+    description: "Password must at least 12 characters long and include at least one uppercase letter, one lowercase letter, and one numeric character"
     pattern: "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\\\"\\\\|,.<>\\/?]).{8,32}$"
     visible: true
+  compartment_ocid:
+    type: oci:identity:compartment:id
+    title: "Compartment"
+    description: "The compartment in which to create Apex instance"
+    required: true
       
 
