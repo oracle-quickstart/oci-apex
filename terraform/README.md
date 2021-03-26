@@ -7,7 +7,7 @@ The service supports unlimited applications, and elastically scales as additiona
 
 ## Deploy Using Oracle Resource Manager
 
-1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)]()
+1. Click [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/oci-apex/releases/download/v0.0.1/oci-quickstart-apex-v0.0.1.zip)
 
     If you aren't already signed in, when prompted, enter the tenancy name and user credentials.
 
