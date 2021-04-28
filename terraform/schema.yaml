@@ -28,8 +28,9 @@ variables:
     type: password
     required: true
     title: "Apex password"
-    description: "Password must at least 12 characters long and include at least one uppercase letter, one lowercase letter, and one numeric character"
-    pattern: "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\\\"\\\\|,.<>\\/?]).{8,32}$"
+    description: "The password should be 12-30 characters and must include an uppercase, lowercase, numeral and a special character"
+    #pattern: "^(?=[a-zA-Z0-9!@#%^*_+\-:?.,\[\]\{\}]{8,32}$)(?=.*?[a-z])(?=.*?[A-Z])(?=.*?[0-9]).*"
+    pattern: "^(?=.*[!#$%&'()*+,\\-.\\/\\:;<=>?@\\[\\]^_`{|}~])(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{12,30}$"
     visible: true
   compartment_ocid:
     type: oci:identity:compartment:id
