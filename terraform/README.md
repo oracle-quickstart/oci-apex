@@ -1,4 +1,4 @@
-# Apex Deployment
+# APEX Deployment
 
 This Terraform configuration helps you create a new fully managed APEX environment on Oracle Cloud Infrastructure.
 The APEX low-code development platform available as a managed cloud service that developers can use to build data-driven enterprise applications quickly and easily.
